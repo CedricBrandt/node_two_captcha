@@ -92,6 +92,25 @@ function are:
 -   `googlekey`: The google key for the ReCaptcha.
 -   `pageurl`: The URL where the ReCaptcha is.
 
+#### hCaptcha
+
+```javascript
+client.decodeHcaptcha({
+  sitekey: 'the_key_extracted from the page',
+  pageurl: 'https://caspers.app/'
+}).then(function(response) {
+  console.log(response.text);
+});
+
+>W0_eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNza2V5IjoiYW5HTXVMSzBva...
+```
+
+`decodeHcaptcha` is an async function. The parameters for `decodeHcaptcha`
+function are:
+
+-   `sitekey`: The sitekey for the hCaptcha.
+-   `pageurl`: The URL where the hCaptcha is.
+
 ### 3. Retrieve a previously solved captcha
 
 ```javascript
