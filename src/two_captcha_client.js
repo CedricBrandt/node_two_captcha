@@ -135,6 +135,41 @@ class TwoCaptchaClient {
   }
 
   /**
+   * Sends a hCaptcha and polls for its response
+   *
+   * @param  {Object} options           Parameters for the request
+   * @param  {string} options.sitekey   The sitekey for the hCaptcha
+   * @param  {string} options.pageurl   The URL where the hCaptcha is
+   * @return {Promise<Captcha>}         Promise for a Captcha object
+   */
+  async decodeHcaptcha(options = {}) {
+    const startedAt = Date.now();
+
+    if (options.googlekey === '') this._throwError('Missing sitekey parameter');
+    if (options.pageurl === '') this._throwError('Missing pageurl parameter');
+
+    const upload_options = {
+      method: 'hcaptcha',
+      sitekey: options.sitekey,
+      pageurl: options.pageurl
+    };
+
+    let decodedCaptcha = await this._upload(upload_options);
+
+    // Keep polling until the answer is ready
+    while (!decodedCaptcha.text) {
+      await this._sleep(Math.max(this.polling, 10)); // Sleep at least 10 seconds
+      if (Date.now() - startedAt > this.timeout) {
+        this._throwError('Captcha timeout');
+        return;
+      }
+      decodedCaptcha = await this.captcha(decodedCaptcha.id);
+    }
+
+    return decodedCaptcha;
+  }
+
+  /**
    * @deprecated /load.php route is returning error 500
    * Get current load from 2Captcha service
    *
