@@ -145,7 +145,7 @@ class TwoCaptchaClient {
   async decodeHcaptcha(options = {}) {
     const startedAt = Date.now();
 
-    if (options.googlekey === '') this._throwError('Missing sitekey parameter');
+    if (options.sitekey === '') this._throwError('Missing sitekey parameter');
     if (options.pageurl === '') this._throwError('Missing pageurl parameter');
 
     const upload_options = {
